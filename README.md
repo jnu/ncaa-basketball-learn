@@ -1,9 +1,9 @@
-March Madness
+NCAA Basketball Learning
 ===
 
 ### About
 
-March Madness machine learning experiments
+College basketball machine learning experiments
 
 *Under development for the 2015 tournament*
 
