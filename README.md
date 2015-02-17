@@ -5,6 +5,8 @@ March Madness
 
 March Madness machine learning experiments
 
+*Under development for the 2015 tournament*
+
 ### Building
 
 Build with `sbt` on Scala `2.10.4`.
