@@ -25,4 +25,4 @@ to be living in the (now empty) `data` directory.
 
 #### Spark
 
-*to be continued*
+*to be continued...*
