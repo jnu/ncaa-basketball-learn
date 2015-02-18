@@ -5,9 +5,10 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
+import org.apache.spark.rdd.RDD
 import org.apache.spark.h2o.H2OContext
 import noodlebot.util.SparkUtil._
-import noodlebot.schema.TeamSummary
+import noodlebot.schema.{Schema, TeamSummary}
 
 /**
  * Run
@@ -28,7 +29,15 @@ object Learn {
         import h2oContext._
 
         // Load source files
-        loadTSV(sc, TeamSummary.parse, "data/2013_summary_team_data.tsv")
+        val teamSummaries : Seq[RDD[Schema]] = loadTSV(
+            sc,
+            TeamSummary.parse,
+            "data/2010_summary_team_data.tsv",
+            "data/2011_summary_team_data.tsv",
+            "data/2012_summary_team_data.tsv",
+            "data/2013_summary_team_data.tsv",
+            "data/2014_summary_team_data.tsv"
+        )
 
         sc.stop()
     }

@@ -7,7 +7,11 @@ package noodlebot.schema
 import noodlebot.util.conversions._
 
 
-
+/**
+ * Schema to hold data summarizing how a team performed in a given season
+ *
+ * TODO field for season?
+ */
 class TeamSummary(
   val ID              : Option[Int],
   val NAME            : Option[String],
@@ -60,7 +64,9 @@ class TeamSummary(
 ) extends Schema
 
 
-
+/**
+ * Static parser method for the TeamSummary schema
+ */
 object TeamSummary {
 
   def parse(parts: Array[String]): TeamSummary = {
