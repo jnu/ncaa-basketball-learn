@@ -61,13 +61,13 @@ class TeamSummary(
   val OPP_FOULS       : Option[Int],
   val OPP_DBLDBL      : Option[Int],
   val OPP_TRPDBL      : Option[Int]
-) extends Schema
+) extends Schema with Serializable
 
 
 /**
  * Static parser method for the TeamSummary schema
  */
-object TeamSummary {
+object TeamSummary extends Serializable {
 
   def parse(parts: Array[String]): TeamSummary = {
     new TeamSummary(

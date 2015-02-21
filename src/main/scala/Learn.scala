@@ -15,21 +15,31 @@ import noodlebot.schema.{Schema, TeamSummary}
  */
 object Learn {
 
-    def main(args: Array[String]) {
-        run()
+    def getSparkContext(): SparkContext = {
+        val conf = new SparkConf().setAppName("NCAA basketball deep learning")
+        new SparkContext(conf)
     }
 
-    def run() {
-        // Create a Spark context
-        val conf = new SparkConf().setAppName("March Madness deep learning")
-        val sc = new SparkContext(conf)
-
+    def getH2OContext(sc: SparkContext): H2OContext = {
         // Create an h2o context inside the Spark context
         val h2oContext = new H2OContext(sc).start();
         import h2oContext._
 
+        h2oContext
+    }
+
+    def stopSpark(sc: SparkContext): Unit = sc.stop()
+
+    def main(args: Array[String]): Unit = {
+        val sc: SparkContext = getSparkContext()
+        val h2oContext: H2OContext = getH2OContext(sc)
+        runInContext(sc, h2oContext)
+        stopSpark(sc)
+    }
+
+    def runInContext(sc: SparkContext, h2oContext: H2OContext): Unit = {
         // Load source files
-        val teamSummaries : Seq[RDD[Schema]] = loadTSV(
+        val teamSummaries : Seq[RDD[TeamSummary]] = loadTSV[TeamSummary](
             sc,
             TeamSummary.parse,
             "data/2010_summary_team_data.tsv",
@@ -38,8 +48,6 @@ object Learn {
             "data/2013_summary_team_data.tsv",
             "data/2014_summary_team_data.tsv"
         )
-
-        sc.stop()
     }
 
 }

@@ -4,4 +4,4 @@
 
 package noodlebot.schema
 
-abstract class Schema()
+trait Schema

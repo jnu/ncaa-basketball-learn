@@ -7,10 +7,12 @@ package noodlebot.util
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import noodlebot.schema.Schema
+import reflect.ClassTag
+import scala.reflect.runtime.universe.TypeTag
 
 object SparkUtil {
 
-  def loadTSV(sc: SparkContext, parser: Array[String] => Schema, files: String*): Seq[RDD[Schema]] = {
+  def loadTSV[T <: Schema: TypeTag: ClassTag](sc: SparkContext, parser: Array[String] => T, files: String*): Seq[RDD[T]] = {
     files.map( f => {
       sc.textFile(f).mapPartitionsWithIndex((idx: Int, lines: Iterator[String]) => {
         if (idx == 0) lines.drop(1) else lines
