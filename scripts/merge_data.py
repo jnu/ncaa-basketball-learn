@@ -86,15 +86,8 @@ def merge_game_row(game_row, team_rows):
             location = 1 if r == HOME_HERO else -1
         row['location'] = location
 
-        # merge game row
-        for key, val in game_row.iteritems():
-            # replace home / away with perspective-oriented epithets
-            if r == AWAY_HERO:
-                key = key.replace('home', CHALLENGER).replace('away', HERO)
-            else:
-                key = key.replace('home', HERO).replace('away', CHALLENGER)
-
-            row[key] = clean_val(val)
+        # store hero team points
+        row['hero_team_points'] = game_row['home_team_pts' if r == HOME_HERO else 'away_team_pts']
 
         # merge away team row
         for key, val in away_team.iteritems():
