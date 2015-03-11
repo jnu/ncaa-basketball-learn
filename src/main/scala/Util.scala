@@ -32,12 +32,15 @@ object SparkUtil {
  */
 object conversions {
 
+  val dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy")
+
   def cleanStr(s: String): String = s.replaceAll("""(?m)\s+$""", "").replaceAll("\u00A0", "")
 
   def str(s: String): Option[String] = {
     val clean = cleanStr(s)
     if (clean.length > 0) Some(clean) else None
   }
+  def string = str _
 
   def int(s: String): Option[Int] = {
     val clean = cleanStr(s.replace(",", ""))
@@ -47,6 +50,11 @@ object conversions {
   def float(s: String): Option[Float] = {
     val clean = cleanStr(s.replace(",", ""))
     if (clean.length > 0) Some(clean.toFloat) else None
+  }
+
+  def date(s: String): Option[java.util.Date] = {
+    val clean = cleanStr(s)
+    if (clean.length > 0) Some(dateFormat.parse(clean)) else None
   }
 
   def minutes(s: String): Option[Float] = {
