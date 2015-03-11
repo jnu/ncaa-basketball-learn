@@ -6,13 +6,17 @@ package noodlebot.util
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import noodlebot.schema.Schema
 import reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
+
+/**
+ * Helpers dealing directly with RDDs in Spark
+ */
 object SparkUtil {
 
-  def loadTSV[T <: Schema: TypeTag: ClassTag](sc: SparkContext, parser: Array[String] => T, files: String*): Seq[RDD[T]] = {
+  // @deprecated This is no longer needed - Use CSV files via H2O DataFrame
+  def loadTSV[T <: Product: TypeTag: ClassTag](sc: SparkContext, parser: Array[String] => T, files: String*): Seq[RDD[T]] = {
     files.map( f => {
       sc.textFile(f).mapPartitionsWithIndex((idx: Int, lines: Iterator[String]) => {
         if (idx == 0) lines.drop(1) else lines
@@ -22,6 +26,10 @@ object SparkUtil {
 
 }
 
+
+/**
+ * Provide a set of String->T conversions
+ */
 object conversions {
 
   def cleanStr(s: String): String = s.replaceAll("""(?m)\s+$""", "").replaceAll("\u00A0", "")

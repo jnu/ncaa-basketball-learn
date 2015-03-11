@@ -61,7 +61,75 @@ class TeamSummary(
   val OPP_FOULS       : Option[Int],
   val OPP_DBLDBL      : Option[Int],
   val OPP_TRPDBL      : Option[Int]
-) extends Schema with Serializable
+) extends Product with Serializable {
+
+  override def canEqual(that: Any): Boolean = that.isInstanceOf[TeamSummary]
+
+  override def productArity: Int = 48
+
+  override def productElement(n: Int) = n match {
+    case  0 => ID
+    case  1 => NAME
+    case  2 => MINUTES
+    case  3 => FGM
+    case  4 => FGA
+    case  5 => FGPCT
+    case  6 => THREEFGM
+    case  7 => THREEFGA
+    case  8 => THREEFGPCT
+    case  9 => FT
+    case 10 => FTA
+    case 11 => FTPCT
+    case 12 => PTS
+    case 13 => PTSAVG
+    case 14 => OFFREB
+    case 15 => DEFREB
+    case 16 => TOTREB
+    case 17 => REBAVG
+    case 18 => AST
+    case 19 => TO
+    case 20 => STL
+    case 21 => BLK
+    case 22 => FOULS
+    case 23 => DBLDBL
+    case 24 => TRPDBL
+    case 25 => OPP_MINUTES
+    case 26 => OPP_FGM
+    case 27 => OPP_FGA
+    case 28 => OPP_FGPCT
+    case 29 => OPP_THREE_FGM
+    case 30 => OPP_THREE_FGA
+    case 31 => OPP_THREE_FGPCT
+    case 32 => OPP_FT
+    case 33 => OPP_FTA
+    case 34 => OPP_FTPCT
+    case 35 => OPP_PTS
+    case 36 => OPP_PTSAVG
+    case 37 => OPP_OFFREB
+    case 38 => OPP_DEFREB
+    case 39 => OPP_TOTREB
+    case 40 => OPP_REBAVG
+    case 41 => OPP_AST
+    case 42 => OPP_TO
+    case 43 => OPP_STL
+    case 44 => OPP_BLK
+    case 45 => OPP_FOULS
+    case 46 => OPP_DBLDBL
+    case 47 => OPP_TRPDBL
+    case  _ => throw new IndexOutOfBoundsException(n.toString)
+  }
+
+  override def toString: String = {
+    val sb = new StringBuffer
+    for (i <- 0 until productArity)
+      sb.append(productElement(i)).append(',')
+    sb.toString
+  }
+
+  // XXX Where is this used?
+  def isWrongRow: Boolean = (0 until productArity).map(idx => productElement(idx)).forall(e => e == None)
+
+}
 
 
 /**
