@@ -1,5 +1,4 @@
-# From
-# https://gist.github.com/nsonnad/7598574
+# From https://gist.github.com/nsonnad/7598574
 
 import sys
 import csv
