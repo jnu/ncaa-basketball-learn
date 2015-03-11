@@ -140,6 +140,8 @@ if __name__ == '__main__':
 
     # Parse and merge all the game / team summary files
     for games, summaries in zip(args.games, args.summaries):
+        print >>sys.stderr, "Merging games from %s and teams from %s ..." % \
+            (games, summaries)
         game_rows = parse_file(games)
         summary_rows = parse_file(summaries)
 
