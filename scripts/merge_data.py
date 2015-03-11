@@ -9,16 +9,18 @@
 import sys
 import csv
 import argparse
+from collections import OrderedDict
 
 # constants
-AWAY_HERO = 'away-hero'
-HOME_HERO = 'home-hero'
+AWAY_HERO = 'away_hero'
+HOME_HERO = 'home_hero'
 HERO = 'hero'
 CHALLENGER = 'challenger'
 
 
 def parse_file(fn):
-    '''Parse the file located at `fn`. Can be either TSV or CSV.
+    '''Parse the file located at `fn`. Can be either TSV or CSV. Result will
+       preserve order from the file.
     '''
     # get the dialect: TSV or CSV
     fmt = fn.rpartition('.')[-1]
@@ -31,7 +33,7 @@ def parse_file(fn):
             if header is None:
                 header = line
                 continue
-            entries.append(dict(zip(header, line)))
+            entries.append(OrderedDict(zip(header, line)))
     return entries
 
 
@@ -73,7 +75,7 @@ def merge_game_row(game_row, team_rows):
 
     # create two rows, one from the home team perspective, one from away
     for r in [AWAY_HERO, HOME_HERO]:
-        row = dict()
+        row = OrderedDict()
 
         # generate unique id
         row['id'] = "%s%s" % (game_row['game_id'], r)
@@ -81,7 +83,7 @@ def merge_game_row(game_row, team_rows):
         # location ternary: -1 for away, 0 for neutral, 1 for home
         location = 0
         if not int(game_row['neutral_site']):
-            location = 1 if r == HOME_HERO else 0
+            location = 1 if r == HOME_HERO else -1
         row['location'] = location
 
         # merge game row
@@ -97,12 +99,12 @@ def merge_game_row(game_row, team_rows):
         # merge away team row
         for key, val in away_team.iteritems():
             pfx = HERO if r == AWAY_HERO else CHALLENGER
-            row["%s-%s" % (pfx, key)] = clean_val(val)
+            row["%s_%s" % (pfx, key)] = clean_val(val)
 
         # merge home team row
         for key, val in home_team.iteritems():
             pfx = HERO if r == HOME_HERO else CHALLENGER
-            row["%s-%s" % (pfx, key)] = clean_val(val)
+            row["%s_%s" % (pfx, key)] = clean_val(val)
 
         # push row
         rows.append(row)
