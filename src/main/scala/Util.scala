@@ -10,6 +10,16 @@ import reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
 
+
+class SimpleCSVHeader(header:Array[String]) extends Serializable {
+  val default = ("", -1)
+  val index = header.zipWithIndex.toMap
+
+  def apply(array: Array[_ <: Any], key: String) = array(index(key))
+
+  def apply(i: Int): String = index.find(_._2 == i).getOrElse(default)._1
+}
+
 /**
  * Helpers dealing directly with RDDs in Spark
  */
@@ -22,6 +32,16 @@ object SparkUtil {
         if (idx == 0) lines.drop(1) else lines
       }).map(line => parser(line.split('\t')))
     })
+  }
+
+  def loadCSVAsRDD[T <: Product: TypeTag: ClassTag](sc: SparkContext, fn: String, parser: Array[String] => T): RDD[T] = {
+    val file = sc.textFile(fn).cache()
+    val data = file.map(_.split(",", -1))
+    val header = new SimpleCSVHeader(data.take(1)(0))
+    val firstHeaderItem = header(0)
+    data
+      .filter(header(_, firstHeaderItem) != firstHeaderItem)
+      .map(parser(_))
   }
 
 }
