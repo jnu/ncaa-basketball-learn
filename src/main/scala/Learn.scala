@@ -67,6 +67,7 @@ object Learn {
 
         // Create DeepLearning model
         val dl = new DeepLearning(dlParams)
+        // Submit spark job
         val dlModel = dl.trainModel.get
 
         val predictionFrame = dlModel.score(dataTable)('predict)
